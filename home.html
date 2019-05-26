@@ -1,33 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>title</title>
-    <link href="style.scss">
-  </head>
-  <body>
-    <div class="stage">
-  <div class="ken stance"></div>
-</div>
-<div class="commands">
-  <h1>Control Ken with ur keyboard</h1>
+<html>
+<head>
 
-    Punch: <button id="a">a</button><br>
-    Kick: <button id="z">z</button><br>
-    Reverse kick: <button id="e">e</button><br>
-    <br>
-    Tatsumaki: <button id="q">q</button><br>
-    Hadoken: <button id="s">s</button><br>
-    Shoryuken: <button id="d">d</button><br>
-    <br>
-    Jump: &nbsp;&nbsp;&nbsp;<button id="up">▲</button><br>
-    Walk: <button id="left">◀</button><button id="right">►</button><br>
-    Kneel: &nbsp;&nbsp;<button id="down">▼</button>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js'>
+</script>
+
+<script src='player.js'></script>
+</head>
+
+<body>
+<div class='section'>
+<canvas width=0 height=0 id='canvas'>
+  Your browser doesn't support the canvas element. Try Chrome.
+</canvas>
 </div>
-  </body>
-  <script
-src="https://code.jquery.com/jquery-3.4.1.js"
-integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-crossorigin="anonymous"></script>
-  <script src="script.js"></script>
+<div class='section'>
+  <b>Player 1</b><br>
+    <b>A/D</b> Move (move away from other player to block)<br>
+    <b>W</b> Jump<br>
+    <b>R</b> Punch<br>
+    <b>T</b> Throw<br>
+  <br>
+  <b>Player 2</b><br>
+    <b>Left/Right arrow</b> Move (move away from other player to block)<br>
+    <b>Up arrow</b> Jump<br>
+    <b>&lt;</b> Punch<br>
+    <b>&gt;</b> Throw<br>
+</div>
+<div id='debug' class='section'></div>
+</body>
 </html>
