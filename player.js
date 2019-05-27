@@ -1,5 +1,6 @@
 var canvas;
 
+// loads the images
 function AnimatingSprite(resource) {
   var that = this;
 
@@ -11,6 +12,7 @@ function AnimatingSprite(resource) {
   }).attr('src', resource)
 }
 
+// sets states of sprite based on the png files
 AnimatingSprite.states = {
  'idle': [0],
  'pain': [1],
@@ -110,9 +112,11 @@ function getContext() {
   return $('#canvas').get(0).getContext('2d');
 }
 
+// helper function to draw player
 function drawPlayer(player) {
   player.sprite.drawAt(context, player.x, player.y, !player.facing_right);
 
+  // creates box to sense hits from opponent
   if (DEBUG) {
     context.fillStyle = 'white';
     context.fillRect(player.x-3, player.y-3, 6, 6);
@@ -130,6 +134,7 @@ function drawPlayer(player) {
   };
 }
 
+// draws the game page for fighting (players, health, and map)
 function draw() {
   // Sky
   context.fillStyle = '#aaf';
@@ -155,7 +160,7 @@ function drawHealth(x, y, player) {
   context.fillRect(x, y, player.health, 10);
 }
 
-
+// creating the basic character movements and reactions
 function Player(x, sprite_sheet, facing_right) {
   this.x = x;
   this.y = 0;
@@ -277,6 +282,7 @@ function Player(x, sprite_sheet, facing_right) {
   this.setAction(ACTION_IDLE);
 }
 
+// reads the values of the key pressed
 function handleInput() {
   if (keys.readKey(KEY_R)) {
     player1.punch();
@@ -312,6 +318,7 @@ function handleInput() {
 
 }
 
+// update per frames
 function update() {
   handleInput();
   player1.update();
@@ -325,6 +332,7 @@ function update() {
   draw();
 }
 
+// watches if a key is pressed
 function KeyWatcher() {
   this.keys = {}
 
@@ -359,7 +367,7 @@ $(document).ready(function() {
   var canvas = document.getElementById('canvas');
   console.log(canvas);
 
-  //report the mouse position on click
+  //report the mouse position on click to choosee character
   canvas.addEventListener("click", function (evt) {
       var mousePos = getMousePos(canvas, evt);
       if (mousePos.x < 600){
@@ -395,26 +403,42 @@ $(document).ready(function() {
 });
 
 function home_screen(ctx) {
+  // creates the menu screen
   context.fillStyle = '#aaf';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   context.fillStyle='black';
   ctx.font = "30px Times";
   ctx.fillText("WELCOME TO WELKIN", WIDTH/3 + 10, 50);
-  ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
-
+  var title = new Image();
+  title.src = 'title.png';
+  title.onload = function (e)
+  {
+      ctx.drawImage(title, 300, 65);
+    }
+  // ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
+  // creates borders for each player's choice (canvas= height:1200 width:600)
+  ctx.rect(50, 170, 500, 410); // (xcor, ycor, width, height)
+  ctx.rect(650, 170, 500, 410);
+  ctx.stroke();
+  // puts the images of the characters for the users to choose
   var img = new Image();
   img.src = 'character.png';
+  /*
+  ctx.drawImage(img, 0, 0, 96, 96, 120, 120, 96, 96);
+  draws the png image the number values ->(first four are bounds of the original image,
+  next two is location on canvas, next two is width and height)
+  */
   img.onload = function (e)
   {
       ctx.drawImage(img, 0, 0, 96, 96,
-      120, 120, 96, 96);
+      150, 120, 96, 96);
     }
   var img2 = new Image();
   img2.src = 'character_2.png';
   img2.onload = function (e)
   {
       ctx.drawImage(img2, 0, 0, 96, 96,
-      800, 120, 96, 96);
+      350, 120, 96, 96);
     }
   var img3 = new Image();
   img3.src = 'character_4.png';
@@ -439,24 +463,6 @@ function getMousePos(canvas, evt) {
     };
 }
 
-
-
-// function create(xcor, ycor){
-//     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-//
-//     rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-//     rect.setAttribute("width",70);
-//     rect.setAttribute("height",96);
-//     rect.setAttribute("x",xcor);
-//     rect.setAttribute("y",ycor);
-//     rect.setAttribute("stroke","black");
-//     rect.setAttribute("fill","black");
-//     svg.appendChild(rect);
-//     document.body.appendChild(svg);
-//
-//     rect.addEventListener("click", hover);
-//     console.log(rect)
-// }
 
 var hover = function(e){
     console.log("chosen");
