@@ -404,46 +404,47 @@ $(document).ready(function() {
 
 function home_screen(ctx) {
   // creates the menu screen
-  context.fillStyle = '#aaf';
+  context.fillStyle = 'black';
   context.fillRect(0, 0, WIDTH, HEIGHT);
-  context.fillStyle='black';
-  ctx.font = "30px Times";
-  ctx.fillText("WELCOME TO WELKIN", WIDTH/3 + 10, 50);
+  var welkin = new Image();
+  welkin.src = 'welkin.png';
+  var one = new Image();
+  one.src = 'one.png';
+  var two = new Image();
+  two.src = 'two.png';
   var title = new Image();
   title.src = 'title.png';
   title.onload = function (e)
   {
+      ctx.drawImage(welkin, 330, 15);
       ctx.drawImage(title, 300, 65);
+      ctx.drawImage(one, 175, 110);
+      ctx.drawImage(two, 775, 110);
     }
   // ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
   // creates borders for each player's choice (canvas= height:1200 width:600)
   ctx.rect(50, 170, 500, 410); // (xcor, ycor, width, height)
   ctx.rect(650, 170, 500, 410);
+  ctx.strokeStyle = "white";
   ctx.stroke();
   // puts the images of the characters for the users to choose
   var img = new Image();
   img.src = 'character.png';
+  var img2 = new Image();
+  img2.src = 'character_2.png';
+  var img3 = new Image();
+  img3.src = 'character_4.png';
   /*
   ctx.drawImage(img, 0, 0, 96, 96, 120, 120, 96, 96);
   draws the png image the number values ->(first four are bounds of the original image,
   next two is location on canvas, next two is width and height)
   */
-  img.onload = function (e)
+  img3.onload = function (e)
   {
       ctx.drawImage(img, 0, 0, 96, 96,
       150, 120, 96, 96);
-    }
-  var img2 = new Image();
-  img2.src = 'character_2.png';
-  img2.onload = function (e)
-  {
       ctx.drawImage(img2, 0, 0, 96, 96,
       350, 120, 96, 96);
-    }
-  var img3 = new Image();
-  img3.src = 'character_4.png';
-  img3.onload = function (e)
-  {
       ctx.drawImage(img3, 0, 0, 96, 96,
       500, 120, 96, 96);
     }
