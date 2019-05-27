@@ -98,7 +98,7 @@ var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
   player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
+  player2 = new Player(WIDTH - 350 * SCALE, 'w.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -352,30 +352,30 @@ $(document).ready(function() {
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
   //console.log(context);
-  home_screen(context);
+  // home_screen(context);
 
-  // // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-  // context.transform(1, 0, 0, -1, SCALE, SCALE);
-  // context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-  //
-  // resetGameState();
-  //
-  // $(document).keydown(function(event) {
-  //   keys.down(event.which);
-  //   if (event.which == KEY_P) {
-  //     DEBUG=!DEBUG;
-  //     $('#debug').text('');
-  //   }
-  //   if (DEBUG) {
-  //     $('#debug').html('Debug:<br>Key: ' + event.which);
-  //   }
-  // });
-  //
-  // $(document).keyup(function(event) {
-  //   keys.up(event.which);
-  // });
-  //
-  // interval = setInterval(update, 30);
+  // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
+  context.transform(1, 0, 0, -1, SCALE, SCALE);
+  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+
+  resetGameState();
+
+  $(document).keydown(function(event) {
+    keys.down(event.which);
+    if (event.which == KEY_P) {
+      DEBUG=!DEBUG;
+      $('#debug').text('');
+    }
+    if (DEBUG) {
+      $('#debug').html('Debug:<br>Key: ' + event.which);
+    }
+  });
+
+  $(document).keyup(function(event) {
+    keys.up(event.which);
+  });
+
+  interval = setInterval(update, 30);
 });
 
 function home_screen(ctx) {
@@ -400,37 +400,36 @@ function home_screen(ctx) {
       800, 120, 96, 96);
     }
   var img3 = new Image();
-  img3.src = 'character_4.png';
+  img3.src = 'ch.png';
   img3.onload = function (e)
   {
       ctx.drawImage(img3, 0, 0, 96, 96,
       500, 120, 96, 96);
     }
 }
-
-var hover = function(e){
-    var requestID = 0;
-    var sprite = e.target;
-    //console.log(e);
-    var current = 0;
-    var shift = function(){
-	c.removeChild(sprite);
-	prev = Number(sprite.getAttribute("y"));
-	sprite.setAttribute("y", prev-5);
-	.appendChild(sprite);
-	//cancel before animating in case  clicked multiple times
-	window.cancelAnimationFrame(requestID)
-	requestID = window.requestAnimationFrame(shift);
-	if (prev<370){
-	    window.cancelAnimationFrame(requestID);
-	};
-    }
-
-    shift();
-}
-
-var reset_position = function(e){
-    var sprite = e.target;
-    sprite.setAttribute("y", 400);
-
-}
+// var hover = function(e){
+//     var requestID = 0;
+//     var sprite = e.target;
+//     //console.log(e);
+//     var current = 0;
+//     var shift = function(){
+// 	c.removeChild(sprite);
+// 	prev = Number(sprite.getAttribute("y"));
+// 	sprite.setAttribute("y", prev-5);
+// 	c.appendChild(sprite);
+// 	//cancel before animating in case  clicked multiple times
+// 	window.cancelAnimationFrame(requestID)
+// 	requestID = window.requestAnimationFrame(shift);
+// 	if (prev<370){
+// 	    window.cancelAnimationFrame(requestID);
+// 	};
+//     }
+//
+//     shift();
+// }
+//
+// var reset_position = function(e){
+//     var sprite = e.target;
+//     sprite.setAttribute("y", 400);
+//
+// }
