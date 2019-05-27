@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+<link rel="stylesheet" href="style.css">
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js'>
 </script>
 
@@ -9,23 +9,23 @@
 </head>
 
 <body>
-<div class='section'>
 <canvas width=0 height=0 id='canvas'>
   Your browser doesn't support the canvas element. Try Chrome.
 </canvas>
-</div>
+
 <div class='section'>
+  <div id ='p1'>
   <b>Player 1</b><br>
-    <b>A/D</b> Move (move away from other player to block)<br>
+    <b>A/D</b> Move (move away from other player to block) &nbsp; &nbsp; &nbsp; &nbsp;  <br>
     <b>W</b> Jump<br>
     <b>R</b> Punch<br>
-    <b>T</b> Throw<br>
   <br>
+</div>
+<div id ='p2'>
   <b>Player 2</b><br>
     <b>Left/Right arrow</b> Move (move away from other player to block)<br>
     <b>Up arrow</b> Jump<br>
-    <b>&lt;</b> Punch<br>
-    <b>&gt;</b> Throw<br>
+    <b>,</b> Punch<br>
 </div>
 <div id='debug' class='section'></div>
 </body>

@@ -31,6 +31,7 @@ AnimatingSprite.prototype.drawAt = function(dest_context, x, y, flip_x) {
                          coords.x, coords.y, 96, 96,
                          0, 0, 96, 96);
   dest_context.restore();
+  console.log(coords.x,coords.y);
 };
 
 AnimatingSprite.prototype.setState = function(state) {
@@ -60,7 +61,7 @@ AnimatingSprite.prototype.getFrameSpriteCoords_ = function() {
   return {x: x, y: y};
 }
 
-var WIDTH=800;
+var WIDTH=1200;
 var HEIGHT=600;
 var ORIGIN_VERTICAL_OFFSET=100;
 var TOP_OF_WINDOW = HEIGHT - ORIGIN_VERTICAL_OFFSET;
@@ -350,9 +351,9 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  console.log(context);
-  intro(context);
-  //
+  //console.log(context);
+  home_screen(context);
+
   // // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
   // context.transform(1, 0, 0, -1, SCALE, SCALE);
   // context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
@@ -373,15 +374,63 @@ $(document).ready(function() {
   // $(document).keyup(function(event) {
   //   keys.up(event.which);
   // });
-
+  //
   // interval = setInterval(update, 30);
 });
 
-function intro(context) {
-  context.fillStyle = 'blue';
+function home_screen(ctx) {
+  context.fillStyle = '#aaf';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   context.fillStyle='black';
-  context.font = "30px C";
-  context.fillText("CHOOSE YOUR CHARACTERS", WIDTH/4, 50);
+  ctx.font = "30px Times";
+  ctx.fillText("WELCOME TO WELKIN", WIDTH/3 + 10, 50);
+  ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
+  var img = new Image();
+  img.src = 'character.png';
+  img.onload = function (e)
+  {
+      ctx.drawImage(img, 0, 0, 96, 96,
+      120, 120, 96, 96);
+    }
+  var img2 = new Image();
+  img2.src = 'character_2.png';
+  img2.onload = function (e)
+  {
+      ctx.drawImage(img2, 0, 0, 96, 96,
+      800, 120, 96, 96);
+    }
+  var img3 = new Image();
+  img3.src = 'character_4.png';
+  img3.onload = function (e)
+  {
+      ctx.drawImage(img3, 0, 0, 96, 96,
+      500, 120, 96, 96);
+    }
+}
+
+var hover = function(e){
+    var requestID = 0;
+    var sprite = e.target;
+    //console.log(e);
+    var current = 0;
+    var shift = function(){
+	c.removeChild(sprite);
+	prev = Number(sprite.getAttribute("y"));
+	sprite.setAttribute("y", prev-5);
+	.appendChild(sprite);
+	//cancel before animating in case  clicked multiple times
+	window.cancelAnimationFrame(requestID)
+	requestID = window.requestAnimationFrame(shift);
+	if (prev<370){
+	    window.cancelAnimationFrame(requestID);
+	};
+    }
+
+    shift();
+}
+
+var reset_position = function(e){
+    var sprite = e.target;
+    sprite.setAttribute("y", 400);
 
 }
