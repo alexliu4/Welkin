@@ -14,9 +14,6 @@ AnimatingSprite.states = {
  'pain': [1],
  'punch_l': [2, 0],
  'punch_r': [3, 0],
- 'block': [4],
- 'throw': [5],
- 'thrown': [7, 8, 9, 10, 10, 0, 0, 0],
 }
 AnimatingSprite.FRAME_TIME = 150;  // milliseconds spent on each frame
 
@@ -85,7 +82,7 @@ var KEY_UP=38;
 
 var ACTION_IDLE = 'idle';
 var ACTION_PUNCH = 'punch';
-var ACTION_BLOCK = 'block';
+var ACTION_PAIN = 'pain';
 var DEBUG = false;
 
 var context;
@@ -98,7 +95,7 @@ var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
   player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'wy.png', false);
+  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -168,7 +165,7 @@ function Player(x, sprite_sheet, facing_right) {
   this.dy = 0;
   this.SPEED = 4;
   this.PUNCH_TIME = 200;
-  this.BLOCK_TIME = 200;
+  this.PAIN_TIME = 200;
   this.PUNCH_RANGE = 70;
   this.PUNCH_DAMAGE = 10;
   this.HIT_MOVE_DISTANCE = 5;
@@ -191,13 +188,14 @@ function Player(x, sprite_sheet, facing_right) {
     this.action = newAction;
     if (newAction == ACTION_PUNCH) {
       var spriteState = (this.facing_right) ? 'punch_l' : 'punch_r';
-    } else if (newAction == ACTION_BLOCK) {
-      var spriteState = 'block';
-    } else {
+    }
+    else if (newAction == ACTION_PAIN) {
+     var spriteState = 'pain';
+    }
+    else {
       var spriteState = 'idle';
     }
     this.sprite.setState(spriteState);
-    console.log(this.sprite.currentState_)
   }
 
   this.punch = function() {
@@ -224,17 +222,14 @@ function Player(x, sprite_sheet, facing_right) {
   }
 
   this.hit = function(damage) {
-    if (this.isBlocking) {
-      this.setAction(ACTION_BLOCK);
-      this.action_timer = this.BLOCK_TIME;
-    } else {
       this.health -= damage;
+      this.setAction(ACTION_PAIN);
+      this.action_timer = this.PAIN_TIME;
       if (this.facing_right) {
         this.x -= this.HIT_MOVE_DISTANCE;
       } else {
         this.x += this.HIT_MOVE_DISTANCE;
       }
-    }
   }
 
   this.distanceTo = function(other) {
@@ -267,10 +262,6 @@ function Player(x, sprite_sheet, facing_right) {
     return this.health >= 0;
   }
 
-  this.block = function(should_block) {
-    this.isBlocking = should_block;
-  }
-
   this.action_timer = 0;
   this.setAction(ACTION_IDLE);
 }
@@ -281,9 +272,6 @@ function handleInput() {
   }
   if (keys.readKey(KEY_A)) {
     player1.moveLeft();
-    player1.block(true);
-  } else {
-    player1.block(false);
   }
   if (keys.readKey(KEY_D)) {
     player1.moveRight();
@@ -300,9 +288,6 @@ function handleInput() {
   }
   if (keys.readKey(KEY_RIGHT)) {
     player2.moveRight();
-    player2.block(true);
-  } else {
-    player2.block(false);
   }
   if (keys.readKey(KEY_UP)) {
     player2.jump();
@@ -351,7 +336,7 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  //console.log(context);
+  // console.log(context);
   // home_screen(context);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
