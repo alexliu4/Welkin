@@ -426,12 +426,25 @@ function home_screen(ctx) {
   */
   img3.onload = function (e)
   {
+      // player one
       ctx.drawImage(img, 0, 0, 96, 96,
-      150, 120, 96, 96);
+      150, 220, 96, 96);
       ctx.drawImage(img2, 0, 0, 96, 96,
-      350, 120, 96, 96);
+      350, 220, 96, 96);
       ctx.drawImage(img3, 0, 0, 96, 96,
-      500, 120, 96, 96);
+      150, 400, 96, 96);
+      ctx.drawImage(img3, 0, 0, 96, 96,
+      350, 400, 96, 96);
+      // player two
+      // player one
+      ctx.drawImage(img, 0, 0, 96, 96,
+      750, 220, 96, 96);
+      ctx.drawImage(img2, 0, 0, 96, 96,
+      950, 220, 96, 96);
+      ctx.drawImage(img3, 0, 0, 96, 96,
+      750, 400, 96, 96);
+      ctx.drawImage(img3, 0, 0, 96, 96,
+      950, 400, 96, 96);
     }
   // img.addEventListener("mouseover", hover);
   // console.log(img);
