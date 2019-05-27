@@ -98,7 +98,7 @@ var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
   player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'w.png', false);
+  player2 = new Player(WIDTH - 350 * SCALE, 'wy.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -391,6 +391,7 @@ function home_screen(ctx) {
   {
       ctx.drawImage(img, 0, 0, 96, 96,
       120, 120, 96, 96);
+      create(120, 120);
     }
   var img2 = new Image();
   img2.src = 'character_2.png';
@@ -398,38 +399,60 @@ function home_screen(ctx) {
   {
       ctx.drawImage(img2, 0, 0, 96, 96,
       800, 120, 96, 96);
+      create(800, 120);
     }
   var img3 = new Image();
-  img3.src = 'ch.png';
+  img3.src = 'character_4.png';
   img3.onload = function (e)
   {
       ctx.drawImage(img3, 0, 0, 96, 96,
       500, 120, 96, 96);
+      create(800, 120);
     }
+  // img.addEventListener("mouseover", hover);
+  // console.log(img);
+  // img2.addEventListener("mouseover", hover);
+  // img3.addEventListener("mouseover", hover);
+
 }
-// var hover = function(e){
-//     var requestID = 0;
-//     var sprite = e.target;
-//     //console.log(e);
-//     var current = 0;
-//     var shift = function(){
-// 	c.removeChild(sprite);
-// 	prev = Number(sprite.getAttribute("y"));
-// 	sprite.setAttribute("y", prev-5);
-// 	c.appendChild(sprite);
-// 	//cancel before animating in case  clicked multiple times
-// 	window.cancelAnimationFrame(requestID)
-// 	requestID = window.requestAnimationFrame(shift);
-// 	if (prev<370){
-// 	    window.cancelAnimationFrame(requestID);
-// 	};
-//     }
-//
-//     shift();
-// }
-//
-// var reset_position = function(e){
-//     var sprite = e.target;
-//     sprite.setAttribute("y", 400);
-//
-// }
+
+function create(xcor, ycor){
+    R = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    R.setAttributeNS(null,"width",70);
+    R.setAttributeNS(null,"height",96);
+    R.setAttributeNS(null,"x",xcor);
+    R.setAttributeNS(null,"y",ycor);
+    R.setAttributeNS(null,"stroke","black");
+    R.setAttributeNS(null,"fill","black");
+
+    R.addEventListener("click", hover);
+    console.log(R)
+}
+
+var hover = function(e){
+    console.log("chosen");
+  //   var requestID = 0;
+  //   var sprite = e.target;
+  //   //console.log(e);
+  //   var current = 0;
+  //   var shift = function(){
+	// c.removeChild(sprite);
+	// prev = Number(sprite.getAttribute("y"));
+	// sprite.setAttribute("y", prev-5);
+	// c.appendChild(sprite);
+	// //cancel before animating in case  clicked multiple times
+	// window.cancelAnimationFrame(requestID)
+	// requestID = window.requestAnimationFrame(shift);
+	// if (prev<370){
+	//     window.cancelAnimationFrame(requestID);
+	// };
+  //   }
+  //
+  //   shift();
+}
+
+var reset_position = function(e){
+    var sprite = e.target;
+    sprite.setAttribute("y", 400);
+
+}
