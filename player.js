@@ -1,3 +1,5 @@
+var canvas;
+
 function AnimatingSprite(resource) {
   var that = this;
 
@@ -351,31 +353,45 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  //console.log(context);
-  // home_screen(context);
+  console.log(context);
+  home_screen(context);
+
+  var canvas = document.getElementById('canvas');
+  console.log(canvas);
+
+  //report the mouse position on click
+  canvas.addEventListener("click", function (evt) {
+      var mousePos = getMousePos(canvas, evt);
+      if (mousePos.x < 600){
+        alert("Player one has chosen ______")
+      } else {
+        alert("Player two has chosen ______")
+      }
+      // alert(mousePos.x + ',' + mousePos.y);
+  }, false);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-  context.transform(1, 0, 0, -1, SCALE, SCALE);
-  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-
-  resetGameState();
-
-  $(document).keydown(function(event) {
-    keys.down(event.which);
-    if (event.which == KEY_P) {
-      DEBUG=!DEBUG;
-      $('#debug').text('');
-    }
-    if (DEBUG) {
-      $('#debug').html('Debug:<br>Key: ' + event.which);
-    }
-  });
-
-  $(document).keyup(function(event) {
-    keys.up(event.which);
-  });
-
-  interval = setInterval(update, 30);
+//   context.transform(1, 0, 0, -1, SCALE, SCALE);
+//   context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+//
+//   resetGameState();
+//
+  // $(document).keydown(function(event) {
+  //   keys.down(event.which);
+  //   if (event.which == KEY_P) {
+  //     DEBUG=!DEBUG;
+  //     $('#debug').text('');
+  //   }
+  //   if (DEBUG) {
+  //     $('#debug').html('Debug:<br>Key: ' + event.which);
+  //   }
+  // });
+//
+//   $(document).keyup(function(event) {
+//     keys.up(event.which);
+//   });
+//
+//   interval = setInterval(update, 30);
 });
 
 function home_screen(ctx) {
@@ -385,13 +401,13 @@ function home_screen(ctx) {
   ctx.font = "30px Times";
   ctx.fillText("WELCOME TO WELKIN", WIDTH/3 + 10, 50);
   ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
+
   var img = new Image();
   img.src = 'character.png';
   img.onload = function (e)
   {
       ctx.drawImage(img, 0, 0, 96, 96,
       120, 120, 96, 96);
-      create(120, 120);
     }
   var img2 = new Image();
   img2.src = 'character_2.png';
@@ -399,7 +415,6 @@ function home_screen(ctx) {
   {
       ctx.drawImage(img2, 0, 0, 96, 96,
       800, 120, 96, 96);
-      create(800, 120);
     }
   var img3 = new Image();
   img3.src = 'character_4.png';
@@ -407,7 +422,6 @@ function home_screen(ctx) {
   {
       ctx.drawImage(img3, 0, 0, 96, 96,
       500, 120, 96, 96);
-      create(800, 120);
     }
   // img.addEventListener("mouseover", hover);
   // console.log(img);
@@ -416,18 +430,33 @@ function home_screen(ctx) {
 
 }
 
-function create(xcor, ycor){
-    R = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    R.setAttributeNS(null,"width",70);
-    R.setAttributeNS(null,"height",96);
-    R.setAttributeNS(null,"x",xcor);
-    R.setAttributeNS(null,"y",ycor);
-    R.setAttributeNS(null,"stroke","black");
-    R.setAttributeNS(null,"fill","black");
-
-    R.addEventListener("click", hover);
-    console.log(R)
+//Get Mouse Position
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
 }
+
+
+
+// function create(xcor, ycor){
+//     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+//
+//     rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+//     rect.setAttribute("width",70);
+//     rect.setAttribute("height",96);
+//     rect.setAttribute("x",xcor);
+//     rect.setAttribute("y",ycor);
+//     rect.setAttribute("stroke","black");
+//     rect.setAttribute("fill","black");
+//     svg.appendChild(rect);
+//     document.body.appendChild(svg);
+//
+//     rect.addEventListener("click", hover);
+//     console.log(rect)
+// }
 
 var hover = function(e){
     console.log("chosen");
@@ -451,8 +480,7 @@ var hover = function(e){
   //   shift();
 }
 
-var reset_position = function(e){
-    var sprite = e.target;
-    sprite.setAttribute("y", 400);
-
-}
+// var reset_position = function(e){
+//     var sprite = e.target;
+//     sprite.setAttribute("y", 400);
+// }
