@@ -1,3 +1,6 @@
+var canvas;
+
+// loads the images
 function AnimatingSprite(resource) {
   var that = this;
 
@@ -9,6 +12,7 @@ function AnimatingSprite(resource) {
   }).attr('src', resource)
 }
 
+// sets states of sprite based on the png files
 AnimatingSprite.states = {
  'idle': [0],
  'pain': [1],
@@ -105,9 +109,11 @@ function getContext() {
   return $('#canvas').get(0).getContext('2d');
 }
 
+// helper function to draw player
 function drawPlayer(player) {
   player.sprite.drawAt(context, player.x, player.y, !player.facing_right);
 
+  // creates box to sense hits from opponent
   if (DEBUG) {
     context.fillStyle = 'white';
     context.fillRect(player.x-3, player.y-3, 6, 6);
@@ -125,6 +131,7 @@ function drawPlayer(player) {
   };
 }
 
+// draws the game page for fighting (players, health, and map)
 function draw() {
   // Sky
   context.fillStyle = '#aaf';
@@ -150,7 +157,7 @@ function drawHealth(x, y, player) {
   context.fillRect(x, y, player.health, 10);
 }
 
-
+// creating the basic character movements and reactions
 function Player(x, sprite_sheet, facing_right) {
   this.x = x;
   this.y = 0;
@@ -266,6 +273,7 @@ function Player(x, sprite_sheet, facing_right) {
   this.setAction(ACTION_IDLE);
 }
 
+// reads the values of the key pressed
 function handleInput() {
   if (keys.readKey(KEY_R)) {
     player1.punch();
@@ -295,6 +303,7 @@ function handleInput() {
 
 }
 
+// update per frames
 function update() {
   handleInput();
   player1.update();
@@ -308,6 +317,7 @@ function update() {
   draw();
 }
 
+// watches if a key is pressed
 function KeyWatcher() {
   this.keys = {}
 
@@ -336,55 +346,84 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  // console.log(context);
-  // home_screen(context);
+  console.log(context);
+  home_screen(context);
+
+  var canvas = document.getElementById('canvas');
+  console.log(canvas);
+
+  //report the mouse position on click to choosee character
+  canvas.addEventListener("click", function (evt) {
+      var mousePos = getMousePos(canvas, evt);
+      if (mousePos.x < 600){
+        alert("Player one has chosen ______")
+      } else {
+        alert("Player two has chosen ______")
+      }
+      // alert(mousePos.x + ',' + mousePos.y);
+  }, false);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-  context.transform(1, 0, 0, -1, SCALE, SCALE);
-  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-
-  resetGameState();
-
-  $(document).keydown(function(event) {
-    keys.down(event.which);
-    if (event.which == KEY_P) {
-      DEBUG=!DEBUG;
-      $('#debug').text('');
-    }
-    if (DEBUG) {
-      $('#debug').html('Debug:<br>Key: ' + event.which);
-    }
-  });
-
-  $(document).keyup(function(event) {
-    keys.up(event.which);
-  });
-
-  interval = setInterval(update, 30);
+//   context.transform(1, 0, 0, -1, SCALE, SCALE);
+//   context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+//
+//   resetGameState();
+//
+  // $(document).keydown(function(event) {
+  //   keys.down(event.which);
+  //   if (event.which == KEY_P) {
+  //     DEBUG=!DEBUG;
+  //     $('#debug').text('');
+  //   }
+  //   if (DEBUG) {
+  //     $('#debug').html('Debug:<br>Key: ' + event.which);
+  //   }
+  // });
+//
+//   $(document).keyup(function(event) {
+//     keys.up(event.which);
+//   });
+//
+//   interval = setInterval(update, 30);
 });
 
 function home_screen(ctx) {
+  // creates the menu screen
   context.fillStyle = '#aaf';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   context.fillStyle='black';
   ctx.font = "30px Times";
   ctx.fillText("WELCOME TO WELKIN", WIDTH/3 + 10, 50);
-  ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
+  var title = new Image();
+  title.src = 'title.png';
+  title.onload = function (e)
+  {
+      ctx.drawImage(title, 300, 65);
+    }
+  // ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
+  // creates borders for each player's choice (canvas= height:1200 width:600)
+  ctx.rect(50, 170, 500, 410); // (xcor, ycor, width, height)
+  ctx.rect(650, 170, 500, 410);
+  ctx.stroke();
+  // puts the images of the characters for the users to choose
   var img = new Image();
   img.src = 'character.png';
+  /*
+  ctx.drawImage(img, 0, 0, 96, 96, 120, 120, 96, 96);
+  draws the png image the number values ->(first four are bounds of the original image,
+  next two is location on canvas, next two is width and height)
+  */
   img.onload = function (e)
   {
       ctx.drawImage(img, 0, 0, 96, 96,
-      120, 120, 96, 96);
-      create(120, 120);
+      150, 120, 96, 96);
     }
   var img2 = new Image();
   img2.src = 'character_2.png';
   img2.onload = function (e)
   {
       ctx.drawImage(img2, 0, 0, 96, 96,
-      800, 120, 96, 96);
-      create(800, 120);
+      350, 120, 96, 96);
     }
   var img3 = new Image();
   img3.src = 'character_4.png';
@@ -392,7 +431,6 @@ function home_screen(ctx) {
   {
       ctx.drawImage(img3, 0, 0, 96, 96,
       500, 120, 96, 96);
-      create(800, 120);
     }
   // img.addEventListener("mouseover", hover);
   // console.log(img);
@@ -401,18 +439,15 @@ function home_screen(ctx) {
 
 }
 
-function create(xcor, ycor){
-    R = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    R.setAttributeNS(null,"width",70);
-    R.setAttributeNS(null,"height",96);
-    R.setAttributeNS(null,"x",xcor);
-    R.setAttributeNS(null,"y",ycor);
-    R.setAttributeNS(null,"stroke","black");
-    R.setAttributeNS(null,"fill","black");
-
-    R.addEventListener("click", hover);
-    console.log(R)
+//Get Mouse Position
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
 }
+
 
 var hover = function(e){
     console.log("chosen");
@@ -436,8 +471,7 @@ var hover = function(e){
   //   shift();
 }
 
-var reset_position = function(e){
-    var sprite = e.target;
-    sprite.setAttribute("y", 400);
-
-}
+// var reset_position = function(e){
+//     var sprite = e.target;
+//     sprite.setAttribute("y", 400);
+// }
