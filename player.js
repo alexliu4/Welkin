@@ -1,4 +1,3 @@
-
 function AnimatingSprite(resource) {
   var that = this;
 
@@ -7,13 +6,6 @@ function AnimatingSprite(resource) {
   this.loaded_ = false;
   $(this.image_).load(function() {
     that.setState('idle');
-
-    //that.loaded_ = true;
-
-    // Create a canvas element to hold this image
-    //that.canvas_ = document.createElement('canvas');
-    //that.context_ = that.canvas_.getContext('2d');
-    // Copy the image into the canvas
   }).attr('src', resource)
 }
 
@@ -174,8 +166,8 @@ function Player(x, sprite_sheet, facing_right) {
 
   this.dy = 0;
   this.SPEED = 4;
-  this.PUNCH_TIME = 0.5;
-  this.BLOCK_TIME = 0.5;
+  this.PUNCH_TIME = 200;
+  this.BLOCK_TIME = 200;
   this.PUNCH_RANGE = 70;
   this.PUNCH_DAMAGE = 10;
   this.HIT_MOVE_DISTANCE = 5;
@@ -204,6 +196,7 @@ function Player(x, sprite_sheet, facing_right) {
       var spriteState = 'idle';
     }
     this.sprite.setState(spriteState);
+    console.log(this.sprite.currentState_)
   }
 
   this.punch = function() {
@@ -266,6 +259,7 @@ function Player(x, sprite_sheet, facing_right) {
         this.setAction(ACTION_IDLE);
       }
     }
+    this.facing_right = (this.x < this.other_player.x);
   }
 
   this.isAlive = function() {
@@ -356,27 +350,38 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
+  console.log(context);
+  intro(context);
+  //
+  // // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
+  // context.transform(1, 0, 0, -1, SCALE, SCALE);
+  // context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+  //
+  // resetGameState();
+  //
+  // $(document).keydown(function(event) {
+  //   keys.down(event.which);
+  //   if (event.which == KEY_P) {
+  //     DEBUG=!DEBUG;
+  //     $('#debug').text('');
+  //   }
+  //   if (DEBUG) {
+  //     $('#debug').html('Debug:<br>Key: ' + event.which);
+  //   }
+  // });
+  //
+  // $(document).keyup(function(event) {
+  //   keys.up(event.which);
+  // });
 
-  // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-  context.transform(1, 0, 0, -1, SCALE, SCALE);
-  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-
-  resetGameState();
-
-  $(document).keydown(function(event) {
-    keys.down(event.which);
-    if (event.which == KEY_P) {
-      DEBUG=!DEBUG;
-      $('#debug').text('');
-    }
-    if (DEBUG) {
-      $('#debug').html('Debug:<br>Key: ' + event.which);
-    }
-  });
-
-  $(document).keyup(function(event) {
-    keys.up(event.which);
-  });
-
-  interval = setInterval(update, 30);
+  // interval = setInterval(update, 30);
 });
+
+function intro(context) {
+  context.fillStyle = 'blue';
+  context.fillRect(0, 0, WIDTH, HEIGHT);
+  context.fillStyle='black';
+  context.font = "30px C";
+  context.fillText("CHOOSE YOUR CHARACTERS", WIDTH/4, 50);
+
+}
