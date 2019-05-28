@@ -401,7 +401,7 @@ $(document).ready(function() {
 
 function home_screen(ctx) {
   // creates the menu screen
-  context.fillStyle = 'gray';
+  context.fillStyle = '#696969';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   var welkin = new Image();
   welkin.src = 'welkin.png';
