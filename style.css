@@ -1,20 +1,22 @@
 canvas {
   border: solid 1px #ccc;
   padding: 2px;
+  cursor: url('favicon.ico'), default;
 }
 
-.section {
-  float: right;
-  position: relative;
+body {
+	cursor: url('https://banner2.kisspng.com/20180128/qsw/kisspng-frankenstein-sword-cartoon-illustration-sword-5a6e698ccc8f34.2569941015171854208379.jpg'), auto;
 }
 
 #p1 {
   float: left;
+  margin-left: 250px;
   position: relative;
 }
 
 #p2{
   float: right;
+  margin-right: 400px;
   postion: relative;
 }
 #game_over {

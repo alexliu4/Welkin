@@ -1,4 +1,7 @@
 var canvas;
+var p1;
+var p2;
+var go = false;
 
 // loads the images
 function AnimatingSprite(resource) {
@@ -21,7 +24,7 @@ AnimatingSprite.states = {
 }
 AnimatingSprite.FRAME_TIME = 150;  // milliseconds spent on each frame
 
-AnimatingSprite.prototype.drawAt = function(dest_context, x, y, flip_x) {
+AnimatingSprite.prototype.drawAt = function(dest_context, x, y, flip_x, player) {
   dest_context.save();
   coords = this.getFrameSpriteCoords_();
   var flip_factor = (flip_x) ? -1 : 1;
@@ -31,6 +34,12 @@ AnimatingSprite.prototype.drawAt = function(dest_context, x, y, flip_x) {
   dest_context.drawImage(this.image_,
                          coords.x, coords.y, 96, 96,
                          0, 0, 96, 96);
+  dest_context.font = "30px Times";
+  if (player == 1)
+    dest_context.fillText("I", 35, 5);
+  else
+    dest_context.fillText("II", 35, 5);
+
   dest_context.restore();
   console.log(coords.x,coords.y);
 };
@@ -97,9 +106,9 @@ var interval;
 
 var SPRITE_HALF_WIDTH = 96/2;
 
-function resetGameState() {
-  player1 = new Player(350, 'mermaid.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'knight.png', false);
+function resetGameState(p1,p2) {
+  player1 = new Player(350, p1+ '.png', true);
+  player2 = new Player(WIDTH - 350 * SCALE, p2+'.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -110,8 +119,8 @@ function getContext() {
 }
 
 // helper function to draw player
-function drawPlayer(player) {
-  player.sprite.drawAt(context, player.x, player.y, !player.facing_right);
+function drawPlayer(player,which) {
+  player.sprite.drawAt(context, player.x, player.y, !player.facing_right,which);
 
   // creates box to sense hits from opponent
   if (DEBUG) {
@@ -142,8 +151,8 @@ function draw() {
   context.fillRect(0, GROUND_VISUAL_OFFSET, WIDTH, -HEIGHT);
 
   // Sprites
-  drawPlayer(player1);
-  drawPlayer(player2);
+  drawPlayer(player1,1);
+  drawPlayer(player2,2);
 
   // HUD
   drawHealth(10, TOP_OF_WINDOW - 20, player1);
@@ -310,8 +319,17 @@ function update() {
   player2.update();
 
   if (!player1.isAlive() || !player2.isAlive()) {
-    //alert("Game Over. Reset...");
-    resetGameState();
+    // alert("Game Over. Reset...");
+    console.log("game over");
+    var game = new Image();
+    game.src = 'game_over.png';
+    var ctx = $('#canvas').get(0).getContext('2d');
+    console.log(ctx);
+    game.onload = function(){
+      ctx.drawImage(game, 350, 350);
+    }
+    // resetGameState();
+    timedRefresh(6000); // waits 6 seconds on game over page
   }
 
   draw();
@@ -348,60 +366,74 @@ $(document).ready(function() {
   context = getContext();
   // console.log(context);
   home_screen(context);
-
   var canvas = document.getElementById('canvas');
+  var clicked = {1:false,2:false}
   // console.log(canvas);
 
-  //report the mouse position on click to choosee character
+  //report the mouse position on click to choosen character
   canvas.addEventListener("click", function (evt) {
       var mousePos = getMousePos(canvas, evt);
       if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
-        alert("Player 1 has chosen " + check(mousePos.x, mousePos.y));
+        p1 = check(mousePos.x,mousePos.y);
+        if (clicked[1]){
+          alert("Character already chosen")
+        }
+        else{
+          p1 = check(mousePos.x,mousePos.y);
+          hover(p1, 1, context);
+          clicked[1] = true;
+        }
+
       } else if ( check(mousePos.x, mousePos.y) ){
-        alert("Player 2 has chosen " + check(mousePos.x, mousePos.y));
+        if (clicked[2]){
+          alert("Character already chosen")
+        }
+        else{
+          p2 = check(mousePos.x,mousePos.y);
+          hover(p2, 2, context);
+          clicked[2] = true;
+        }
+
       }
       // alert(mousePos.x + ',' + mousePos.y);
       // console.log(mousePos.x, mousePos.y);
 
-  }, false);
+      // context.clearRect(0, 0, WIDTH, HEIGHT)
+      // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
+      if (go){
+        evt.preventDefault();
+        context.transform(1, 0, 0, -1, SCALE, SCALE);
+        context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
 
-  canvas.addEventListener("mouseover", function (evt) {
-      var mousePos = getMousePos(canvas, evt);
-      if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
-        alert("Player 1 has chosen " + check(mousePos.x, mousePos.y));
-      } else if ( check(mousePos.x, mousePos.y) ){
-        alert("Player 2 has chosen " + check(mousePos.x, mousePos.y));
+        resetGameState(p1,p2);
+
+        $(document).keydown(function(event) {
+          keys.down(event.which);
+          if (event.which == KEY_P) {
+            DEBUG=!DEBUG;
+            $('#debug').text('');
+          }
+          if (DEBUG) {
+            $('#debug').html('Debug:<br>Key: ' + event.which);
+          }
+        });
+
+        $(document).keyup(function(event) {
+          keys.up(event.which);
+        });
+
+        interval = setInterval(update, 30);
+
       }
+    },false)
+  });
 
-  }, false);
 
-  // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-//   context.transform(1, 0, 0, -1, SCALE, SCALE);
-//   context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-//
-//   resetGameState();
-//
-  // $(document).keydown(function(event) {
-  //   keys.down(event.which);
-  //   if (event.which == KEY_P) {
-  //     DEBUG=!DEBUG;
-  //     $('#debug').text('');
-  //   }
-  //   if (DEBUG) {
-  //     $('#debug').html('Debug:<br>Key: ' + event.which);
-  //   }
-  // });
-//
-//   $(document).keyup(function(event) {
-//     keys.up(event.which);
-//   });
-//
-//   interval = setInterval(update, 30);
-});
+
 
 function home_screen(ctx) {
   // creates the menu screen
-  context.fillStyle = '#696969';
+  context.fillStyle = '#001a00';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   var welkin = new Image();
   welkin.src = 'welkin.png';
@@ -409,6 +441,8 @@ function home_screen(ctx) {
   one.src = 'one.png';
   var two = new Image();
   two.src = 'two.png';
+  var fight = new Image();
+  fight.src = 'fight.png';
   var title = new Image();
   title.src = 'title.png';
   title.onload = function (e)
@@ -417,26 +451,35 @@ function home_screen(ctx) {
       ctx.drawImage(title, 300, 65);
       ctx.drawImage(one, 175, 110);
       ctx.drawImage(two, 775, 110);
+      ctx.drawImage(fight, 521, 350);
     }
   // ctx.fillText("CHOOSE YOUR FIGHTER", WIDTH/3, 100);
   // creates borders for each player's choice (canvas= height:1200 width:600)
   ctx.rect(50, 170, 500, 410); // (xcor, ycor, width, height)
   ctx.rect(650, 170, 500, 410);
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = "gray";
   ctx.stroke();
+  // fight button
+  ctx.fillStyle = 'gray';
+  // ctx.fillRect(550, 350, 100, 50);
+  ctx.fillRect(500, 325, 200, 80);
+  ctx.fillStyle = '#001a00'
   // puts the images of the characters for the users to choose
   var img = new Image();
-  img.src = 'character.png';
+  img.src = 'baebio.png';
   var img2 = new Image();
-  img2.src = 'character_2.png';
+  img2.src = 'astaphium.png';
   var img3 = new Image();
-  img3.src = 'character2.png';
+  img3.src = 'hokkaido.png';
+  var img4 = new Image();
+  img4.src = 'nordsman.png';
+
   /*
   ctx.drawImage(img, 0, 0, 96, 96, 120, 120, 96, 96);
   draws the png image the number values ->(first four are bounds of the original image,
   next two is location on canvas, next two is width and height)
   */
-  img3.onload = function (e)
+  img4.onload = function (e)
   {
       // player one
       ctx.drawImage(img, 0, 0, 96, 96,
@@ -445,7 +488,7 @@ function home_screen(ctx) {
       350, 220, 96, 96);
       ctx.drawImage(img3, 0, 0, 96, 96,
       150, 400, 96, 96);
-      ctx.drawImage(img3, 0, 0, 96, 96,
+      ctx.drawImage(img4, 0, 0, 96, 96,
       350, 400, 96, 96);
       // player two
       ctx.drawImage(img, 0, 0, 96, 96,
@@ -454,10 +497,9 @@ function home_screen(ctx) {
       950, 220, 96, 96);
       ctx.drawImage(img3, 0, 0, 96, 96,
       750, 400, 96, 96);
-      ctx.drawImage(img3, 0, 0, 96, 96,
+      ctx.drawImage(img4, 0, 0, 96, 96,
       950, 400, 96, 96);
     }
-
 }
 
 //Get Mouse Position
@@ -472,6 +514,17 @@ function getMousePos(canvas, evt) {
 // check <- helper function for character selection
 function check(xcor, ycor){
   var x = xcor; var y = ycor;
+  // for the start fight button
+  if (xcor >= 500 && xcor <= 700 && ycor >= 325 && ycor <= 405 ){
+    if (p1 && p2 ){
+      alert("fight shall begin");
+      go = true;
+    } else {
+      alert("Cannot begin fight without choosing fighters!!");
+    }
+  }
+
+  // for the character
   if (xcor > 600){
     x -= 600; //overlaps player 2
   }
@@ -479,69 +532,95 @@ function check(xcor, ycor){
   y -= 220; // makes it start from origin
   if (ycor < 400){
     if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 1
-      return 1;
+      return "baebio";
     }
     else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 2
-      return 2;
+      return "astaphium";
     }
   } else {
     y -= 180;
     if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 3
-      return 3;
+      return "hokkaido";
     }
     else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 4
-      return 4;
+      return "nordsman";
     }
   }
 }
 
+var size = 96;
+var movement = 3;
+var boundary = 156;
 
-function hover(char, user){
-  var i;
+function hover(char, user, ctx){
+  var i = 0;
   if (user == 2){
     i = 600;
   }
+  clear(char, user, ctx);
   switch (char){
-    case 1:
+    case "baebio":
       var img = new Image();
-      img.src = 'character.png';
-      img.onload = function (e)
-      {
-          ctx.drawImage(img, 0, 0, 96, 96,
-          150 + i, 220 + i, 96, 96);
-        }
+      img.src = 'baebio.png';
+      img.onload = function(){
+      ctx.drawImage(img, 0, 0, 96, 96,
+          130 + i, 190, 150, 150);
+      }
       break;
-    case 2:
+    case "astaphium":
       var img2 = new Image();
-      img2.src = 'character_2.png';
-      img2.onload = function (e)
-      {
-          ctx.drawImage(img2, 0, 0, 96, 96,
-          350 + i, 220 + i, 96, 96);
-        }
+      img2.src = 'astaphium.png';
+      img2.onload = function(){
+      ctx.drawImage(img2, 0, 0, 96, 96,
+          330 + i, 190, 150, 150);
+      }
       break;
-    case 3:
+    case "hokkaido":
       var img3 = new Image();
-      img3.src = 'character_4.png';
-      img3.onload = function (e)
-      {
-          ctx.drawImage(img3, 0, 0, 96, 96,
-          150 + i, 400 + i, 96, 96);
-        }
+      img3.src = 'hokkaido.png';
+      img3.onload = function(){
+      ctx.drawImage(img3, 0, 0, 96, 96,
+          130 + i, 370, 150, 150);
+      }
       break;
-    case 4:
-      var img3 = new Image();
-      img3.src = 'character_4.png';
-      img3.onload = function (e)
-      {
-          ctx.drawImage(img3, 0, 0, 96, 96,
-          350 + i, 400 + i, 96, 96);
-        }
+    case "nordsman":
+      var img4 = new Image();
+      img4.src = 'nordsman.png';
+      img4.onload = function(){
+      ctx.drawImage(img4, 0, 0, 96, 96,
+          330 + i, 370, 150, 150);
+      }
       break;
   }
 }
 
-function reset_position(char){
-    var sprite = e.target;
-    sprite.setAttribute("y", 400);
+function clear(char, user, ctx){
+    console.log(ctx);
+    var i = 0;
+    if (user == 2){
+      i = 600;
+    }
+    console.log(i)
+    ctx.fillStyle = '001a00';
+    //ctx.fillStyle = 'black';
+    switch (char){
+      case "baebio":
+        ctx.fillRect(140 + i, 210, 100 , 160 );
+        break;
+      case "astaphium":
+        ctx.fillRect(340 + i, 210, 120,160);
+        break;
+      case "hokkaido":
+        ctx.fillRect(140 + i, 390, 100, 160);
+        break;
+      case "nordsman":
+        ctx.fillRect(330 + i, 360, 150, 200);
+        break;
+    }
+    ctx.stroke();
+}
+
+// helper function to refresh page when game is over
+function timedRefresh(timeoutPeriod) {
+   setTimeout("location.reload(true);",timeoutPeriod);
 }
