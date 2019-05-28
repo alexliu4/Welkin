@@ -357,9 +357,9 @@ $(document).ready(function() {
       var mousePos = getMousePos(canvas, evt);
       if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
         check(mousePos.x, mousePos.y);
-        alert("Player one has chosen " + check(mousePos.x, mousePos.y));
+        alert("Player 1 has chosen " + check(mousePos.x, mousePos.y));
       } else if ( check(mousePos.x, mousePos.y) ){
-        alert("Player two has chosen " + check(mousePos.x, mousePos.y));
+        alert("Player 2 has chosen " + check(mousePos.x, mousePos.y));
       }
       // alert(mousePos.x + ',' + mousePos.y);
       // console.log(mousePos.x, mousePos.y);
