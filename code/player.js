@@ -1,23 +1,9 @@
-/*
-Copyright 2010 Google Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-     
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 
 function Player(x, sprite_sheet, facing_right) {
   this.x = x;
   this.dx = 0;
-  this.y = level.getHeightAtPoint(x);
+  // this.y = level.getHeightAtPoint(x);
+  this.y =0;
   this.dy = 0;
   this.health = 100;
   this.sprite = new AnimatingSprite(sprite_sheet);
@@ -26,7 +12,7 @@ function Player(x, sprite_sheet, facing_right) {
 
   this.other_player = null;
   this.jumped = false;
-    
+
   this.MAX_SPEED = .3;
   this.DX_ACCEL = .05;
   this.DX_DECAY = .02;
@@ -97,7 +83,7 @@ function Player(x, sprite_sheet, facing_right) {
     }
     this.sprite.setState(spriteState);
   }
-  
+
   this.punch = function() {
     if (this.action != ACTION_IDLE) {
       return;
@@ -129,9 +115,9 @@ function Player(x, sprite_sheet, facing_right) {
     this.setAction(ACTION_THROWN);
     this.action_timer = this.THROWN_TIME;
     if (this.facing_right) {
-      this.dx = -this.THROWN_SPEED; 
+      this.dx = -this.THROWN_SPEED;
     } else {
-      this.dx = this.THROWN_SPEED; 
+      this.dx = this.THROWN_SPEED;
     }
   }
 
@@ -146,9 +132,9 @@ function Player(x, sprite_sheet, facing_right) {
       this.setAction(ACTION_PAIN);
       this.action_timer = this.PAIN_TIME;
       if (this.facing_right) {  // BUG: not right if player is walking away
-        this.x -= this.HIT_MOVE_DISTANCE; 
+        this.x -= this.HIT_MOVE_DISTANCE;
       } else {
-        this.x += this.HIT_MOVE_DISTANCE; 
+        this.x += this.HIT_MOVE_DISTANCE;
       }
     }
   }
@@ -157,7 +143,7 @@ function Player(x, sprite_sheet, facing_right) {
     return Math.abs(this.x - other.x);
   }
 
-  this.update = function(dt) { 
+  this.update = function(dt) {
     // Compute the desired vertical position of the character by moving one
     // time step along the velocity vector in the vertical axis.
     var newY = this.y + this.dy * dt;
@@ -172,7 +158,7 @@ function Player(x, sprite_sheet, facing_right) {
       this.dx += this.DX_DECAY;
     }
 
-    // If the desired position intersects with the landscape then stop the jump.
+//    If the desired position intersects with the landscape then stop the jump.
     var newHeight = level.getHeightAtPoint(this.x);
     if (newY < newHeight) {
       newY = newHeight;
@@ -180,7 +166,7 @@ function Player(x, sprite_sheet, facing_right) {
       this.dy = 0;
     }
     this.y = newY;
-    
+
     if (this.action_timer > 0) {
       this.action_timer -= dt;
 
@@ -200,9 +186,7 @@ function Player(x, sprite_sheet, facing_right) {
   this.block = function(should_block) {
     this.isBlocking = should_block;
   }
-  
+
   this.action_timer = 0;
   this.setAction(ACTION_IDLE);
 }
-
-

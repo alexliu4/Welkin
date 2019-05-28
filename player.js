@@ -99,7 +99,7 @@ var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
   player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
+  player2 = new Player(WIDTH - 350 * SCALE, 'character2.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -347,44 +347,44 @@ $(document).ready(function() {
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
   console.log(context);
-  home_screen(context);
-
-  var canvas = document.getElementById('canvas');
-  console.log(canvas);
-
-  //report the mouse position on click to choosee character
-  canvas.addEventListener("click", function (evt) {
-      var mousePos = getMousePos(canvas, evt);
-      if (mousePos.x < 600){
-        alert("Player one has chosen ______")
-      } else {
-        alert("Player two has chosen ______")
-      }
-      // alert(mousePos.x + ',' + mousePos.y);
-  }, false);
+  // home_screen(context);
+  //
+  // var canvas = document.getElementById('canvas');
+  // console.log(canvas);
+  //
+  // //report the mouse position on click to choosee character
+  // canvas.addEventListener("click", function (evt) {
+  //     var mousePos = getMousePos(canvas, evt);
+  //     if (mousePos.x < 600){
+  //       alert("Player one has chosen ______")
+  //     } else {
+  //       alert("Player two has chosen ______")
+  //     }
+  //     // alert(mousePos.x + ',' + mousePos.y);
+  // }, false);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-//   context.transform(1, 0, 0, -1, SCALE, SCALE);
-//   context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-//
-//   resetGameState();
-//
-  // $(document).keydown(function(event) {
-  //   keys.down(event.which);
-  //   if (event.which == KEY_P) {
-  //     DEBUG=!DEBUG;
-  //     $('#debug').text('');
-  //   }
-  //   if (DEBUG) {
-  //     $('#debug').html('Debug:<br>Key: ' + event.which);
-  //   }
-  // });
-//
-//   $(document).keyup(function(event) {
-//     keys.up(event.which);
-//   });
-//
-//   interval = setInterval(update, 30);
+  context.transform(1, 0, 0, -1, SCALE, SCALE);
+  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+
+  resetGameState();
+
+  $(document).keydown(function(event) {
+    keys.down(event.which);
+    if (event.which == KEY_P) {
+      DEBUG=!DEBUG;
+      $('#debug').text('');
+    }
+    if (DEBUG) {
+      $('#debug').html('Debug:<br>Key: ' + event.which);
+    }
+  });
+
+  $(document).keyup(function(event) {
+    keys.up(event.which);
+  });
+
+  interval = setInterval(update, 30);
 });
 
 function home_screen(ctx) {

@@ -1,18 +1,3 @@
-/*
-Copyright 2010 Google Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 
 
 function buildLevel_() {
@@ -32,12 +17,12 @@ function buildLevel_() {
     // Randomly put some holes in
     // (Don't put 2 holes in a row. No holes at start of level)
     if (i > 8 && !previous_was_hole && Math.random() > .8) {
-      new_height = -900; 
+      new_height = -900;
       previous_was_hole = true;
     } else {
       previous_was_hole = false;
     }
-    
+
     level.push(new_height);
   }
   return level;
@@ -60,16 +45,16 @@ function Level() {
       var height = this.getHeightAtPoint(x);
       var image;
       if (index % 2) { image = this.image1_ } else { image = this.image2_};
-      context.drawImage(image, 0, 0, 100, 600, 
+      context.drawImage(image, 0, 0, 100, 600,
          index * this.BLOCK_SIZE - left_x, height - 600, 100, 600);
     }
   }
-  
+
   this.getHeightAtPoint = function(x) {
     var index = this.pixelToHeightIndex_(x);
     return this.level[index];
   }
-  
+
   this.pixelToHeightIndex_ = function(x) {
     return parseInt(x / this.BLOCK_SIZE);
   }

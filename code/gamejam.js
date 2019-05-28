@@ -6,7 +6,7 @@ you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
      http://www.apache.org/licenses/LICENSE-2.0
-     
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,14 +54,13 @@ var keys;
 var player1;
 var player2;
 var interval;
-var level;
 var lastTimeStamp = 0;
 
 var JUMP_TIME_MS = 800;  // jump time in milliseconds
 var JUMP_HEIGHT = 100;  // in pixels
 
 function resetGameState() {
-  level = new Level();
+
   win.reset();
   var player_offset = win.width/2 - INITIAL_PLAYER_SEPARATION;
   player1 = new Player(player_offset, 'character.png', true);
@@ -95,7 +94,7 @@ function handleInput() {
     player1.moveRight();
     player1.block(!player1.facing_right);
   }
-  
+
   if (keys.isPressed(KEY_COMMA)) {
     player2.punch();
   }
@@ -130,7 +129,7 @@ function update() {
     if (player1.y < -100) {
       player1.health -= dt * PIT_DAMAGE;
     }
-    
+
     if (player2.y < -100) {
       player2.health -= dt * PIT_DAMAGE;
     }
@@ -154,7 +153,7 @@ function update() {
 function KeyWatcher() {
   this.keys = {}
   this.lastKey = undefined;
-  
+
   this.down = function(key) {
     this.keys[key] = true;
     this.lastKey = key;
@@ -163,7 +162,7 @@ function KeyWatcher() {
   this.up = function(key) {
     this.keys[key] = false;
   }
-  
+
   this.isPressed = function(key) {
     return this.keys[key];
   }
@@ -198,7 +197,7 @@ $(document).ready(function() {
       clearInterval(interval);
     }
   });
-  
+
   $(document).keyup(function(event) {
     keys.up(event.which);
   });
