@@ -98,8 +98,13 @@ var interval;
 var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
+<<<<<<< HEAD
   player1 = new Player(350, 'mermaid.png', true);
   player2 = new Player(WIDTH - 350 * SCALE, 'knight.png', false);
+=======
+  player1 = new Player(350, 'character.png', true);
+  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
+>>>>>>> 31811421dc850584f4a9908559a880c0b2f33157
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -346,11 +351,12 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  console.log(context);
-  // home_screen(context);
-  //
-  // var canvas = document.getElementById('canvas');
+  // console.log(context);
+  home_screen(context);
+
+  var canvas = document.getElementById('canvas');
   // console.log(canvas);
+<<<<<<< HEAD
 
   // //report the mouse position on click to choosee character
   // canvas.addEventListener("click", function (evt) {
@@ -362,34 +368,59 @@ $(document).ready(function() {
   //     }
   //     // alert(mousePos.x + ',' + mousePos.y);
   // }, false);
+=======
+>>>>>>> 31811421dc850584f4a9908559a880c0b2f33157
+
+  //report the mouse position on click to choosee character
+  canvas.addEventListener("click", function (evt) {
+      var mousePos = getMousePos(canvas, evt);
+      if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
+        alert("Player 1 has chosen " + check(mousePos.x, mousePos.y));
+      } else if ( check(mousePos.x, mousePos.y) ){
+        alert("Player 2 has chosen " + check(mousePos.x, mousePos.y));
+      }
+      // alert(mousePos.x + ',' + mousePos.y);
+      // console.log(mousePos.x, mousePos.y);
+
+  }, false);
+
+  canvas.addEventListener("mouseover", function (evt) {
+      var mousePos = getMousePos(canvas, evt);
+      if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
+        alert("Player 1 has chosen " + check(mousePos.x, mousePos.y));
+      } else if ( check(mousePos.x, mousePos.y) ){
+        alert("Player 2 has chosen " + check(mousePos.x, mousePos.y));
+      }
+
+  }, false);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
-  context.transform(1, 0, 0, -1, SCALE, SCALE);
-  context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
-
-  resetGameState();
-
-  $(document).keydown(function(event) {
-    keys.down(event.which);
-    if (event.which == KEY_P) {
-      DEBUG=!DEBUG;
-      $('#debug').text('');
-    }
-    if (DEBUG) {
-      $('#debug').html('Debug:<br>Key: ' + event.which);
-    }
-  });
-
-  $(document).keyup(function(event) {
-    keys.up(event.which);
-  });
-
-  interval = setInterval(update, 30);
+//   context.transform(1, 0, 0, -1, SCALE, SCALE);
+//   context.translate(0, -HEIGHT + ORIGIN_VERTICAL_OFFSET);
+//
+//   resetGameState();
+//
+  // $(document).keydown(function(event) {
+  //   keys.down(event.which);
+  //   if (event.which == KEY_P) {
+  //     DEBUG=!DEBUG;
+  //     $('#debug').text('');
+  //   }
+  //   if (DEBUG) {
+  //     $('#debug').html('Debug:<br>Key: ' + event.which);
+  //   }
+  // });
+//
+//   $(document).keyup(function(event) {
+//     keys.up(event.which);
+//   });
+//
+//   interval = setInterval(update, 30);
 });
 
 function home_screen(ctx) {
   // creates the menu screen
-  context.fillStyle = 'black';
+  context.fillStyle = 'gray';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   var welkin = new Image();
   welkin.src = 'welkin.png';
@@ -436,7 +467,6 @@ function home_screen(ctx) {
       ctx.drawImage(img3, 0, 0, 96, 96,
       350, 400, 96, 96);
       // player two
-      // player one
       ctx.drawImage(img, 0, 0, 96, 96,
       750, 220, 96, 96);
       ctx.drawImage(img2, 0, 0, 96, 96,
@@ -446,10 +476,6 @@ function home_screen(ctx) {
       ctx.drawImage(img3, 0, 0, 96, 96,
       950, 400, 96, 96);
     }
-  // img.addEventListener("mouseover", hover);
-  // console.log(img);
-  // img2.addEventListener("mouseover", hover);
-  // img3.addEventListener("mouseover", hover);
 
 }
 
@@ -462,30 +488,79 @@ function getMousePos(canvas, evt) {
     };
 }
 
-
-var hover = function(e){
-    console.log("chosen");
-  //   var requestID = 0;
-  //   var sprite = e.target;
-  //   //console.log(e);
-  //   var current = 0;
-  //   var shift = function(){
-	// c.removeChild(sprite);
-	// prev = Number(sprite.getAttribute("y"));
-	// sprite.setAttribute("y", prev-5);
-	// c.appendChild(sprite);
-	// //cancel before animating in case  clicked multiple times
-	// window.cancelAnimationFrame(requestID)
-	// requestID = window.requestAnimationFrame(shift);
-	// if (prev<370){
-	//     window.cancelAnimationFrame(requestID);
-	// };
-  //   }
-  //
-  //   shift();
+// check <- helper function for character selection
+function check(xcor, ycor){
+  var x = xcor; var y = ycor;
+  if (xcor > 600){
+    x -= 600; //overlaps player 2
+  }
+  x -= 150;
+  y -= 220; // makes it start from origin
+  if (ycor < 400){
+    if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 1
+      return 1;
+    }
+    else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 2
+      return 2;
+    }
+  } else {
+    y -= 180;
+    if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 3
+      return 3;
+    }
+    else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 4
+      return 4;
+    }
+  }
 }
 
-// var reset_position = function(e){
-//     var sprite = e.target;
-//     sprite.setAttribute("y", 400);
-// }
+
+function hover(char, user){
+  var i;
+  if (user == 2){
+    i = 600;
+  }
+  switch (char){
+    case 1:
+      var img = new Image();
+      img.src = 'character.png';
+      img.onload = function (e)
+      {
+          ctx.drawImage(img, 0, 0, 96, 96,
+          150 + i, 220 + i, 96, 96);
+        }
+      break;
+    case 2:
+      var img2 = new Image();
+      img2.src = 'character_2.png';
+      img2.onload = function (e)
+      {
+          ctx.drawImage(img2, 0, 0, 96, 96,
+          350 + i, 220 + i, 96, 96);
+        }
+      break;
+    case 3:
+      var img3 = new Image();
+      img3.src = 'character_4.png';
+      img3.onload = function (e)
+      {
+          ctx.drawImage(img3, 0, 0, 96, 96,
+          150 + i, 400 + i, 96, 96);
+        }
+      break;
+    case 4:
+      var img3 = new Image();
+      img3.src = 'character_4.png';
+      img3.onload = function (e)
+      {
+          ctx.drawImage(img3, 0, 0, 96, 96,
+          350 + i, 400 + i, 96, 96);
+        }
+      break;
+  }
+}
+
+function reset_position(char){
+    var sprite = e.target;
+    sprite.setAttribute("y", 400);
+}
