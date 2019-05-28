@@ -98,8 +98,8 @@ var interval;
 var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
-  player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
+  player1 = new Player(350, 'mermaid.png', true);
+  player2 = new Player(WIDTH - 350 * SCALE, 'knight.png', false);
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -430,7 +430,7 @@ function home_screen(ctx) {
   var img2 = new Image();
   img2.src = 'character_2.png';
   var img3 = new Image();
-  img3.src = 'character_4.png';
+  img3.src = 'character2.png';
   /*
   ctx.drawImage(img, 0, 0, 96, 96, 120, 120, 96, 96);
   draws the png image the number values ->(first four are bounds of the original image,
