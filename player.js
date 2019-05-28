@@ -98,13 +98,8 @@ var interval;
 var SPRITE_HALF_WIDTH = 96/2;
 
 function resetGameState() {
-<<<<<<< HEAD
   player1 = new Player(350, 'mermaid.png', true);
   player2 = new Player(WIDTH - 350 * SCALE, 'knight.png', false);
-=======
-  player1 = new Player(350, 'character.png', true);
-  player2 = new Player(WIDTH - 350 * SCALE, 'character_2.png', false);
->>>>>>> 31811421dc850584f4a9908559a880c0b2f33157
   player1.other_player = player2;
   player2.other_player = player1;
   keys = new KeyWatcher();
@@ -356,20 +351,6 @@ $(document).ready(function() {
 
   var canvas = document.getElementById('canvas');
   // console.log(canvas);
-<<<<<<< HEAD
-
-  // //report the mouse position on click to choosee character
-  // canvas.addEventListener("click", function (evt) {
-  //     var mousePos = getMousePos(canvas, evt);
-  //     if (mousePos.x < 600){
-  //       alert("Player one has chosen ______")
-  //     } else {
-  //       alert("Player two has chosen ______")
-  //     }
-  //     // alert(mousePos.x + ',' + mousePos.y);
-  // }, false);
-=======
->>>>>>> 31811421dc850584f4a9908559a880c0b2f33157
 
   //report the mouse position on click to choosee character
   canvas.addEventListener("click", function (evt) {
