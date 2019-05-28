@@ -310,6 +310,10 @@ function handleInput() {
     player2.jump();
   }
 
+  if (keys.readKey(KEY_T)){
+    window.location =" https://corgiorgy.com/";
+  }
+
 }
 
 // update per frames
