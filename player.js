@@ -329,7 +329,7 @@ function update() {
       ctx.drawImage(game, 350, 350);
     }
     // resetGameState();
-    timedRefresh(6000); // waits 6 seconds on game over page
+    timedRefresh(3000); // waits 6 seconds on game over page
   }
 
   draw();
