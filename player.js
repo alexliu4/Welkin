@@ -346,21 +346,24 @@ $(document).ready(function() {
   $('#canvas').attr('width', WIDTH);
   $('#canvas').attr('height', HEIGHT);
   context = getContext();
-  console.log(context);
+  // console.log(context);
   home_screen(context);
 
   var canvas = document.getElementById('canvas');
-  console.log(canvas);
+  // console.log(canvas);
 
   //report the mouse position on click to choosee character
   canvas.addEventListener("click", function (evt) {
       var mousePos = getMousePos(canvas, evt);
-      if (mousePos.x < 600){
-        alert("Player one has chosen ______")
-      } else {
-        alert("Player two has chosen ______")
+      if (mousePos.x < 600 && check(mousePos.x, mousePos.y) ){
+        check(mousePos.x, mousePos.y);
+        alert("Player one has chosen " + check(mousePos.x, mousePos.y));
+      } else if ( check(mousePos.x, mousePos.y) ){
+        alert("Player two has chosen " + check(mousePos.x, mousePos.y));
       }
       // alert(mousePos.x + ',' + mousePos.y);
+      // console.log(mousePos.x, mousePos.y);
+
   }, false);
 
   // Flip y-axis, move camera down so (0, 0) isn't touching bottom of window
@@ -389,7 +392,7 @@ $(document).ready(function() {
 
 function home_screen(ctx) {
   // creates the menu screen
-  context.fillStyle = 'black';
+  context.fillStyle = 'gray';
   context.fillRect(0, 0, WIDTH, HEIGHT);
   var welkin = new Image();
   welkin.src = 'welkin.png';
@@ -460,6 +463,32 @@ function getMousePos(canvas, evt) {
         x: evt.clientX - rect.left,
         y: evt.clientY - rect.top
     };
+}
+
+// check <- helper function for character selection
+function check(xcor, ycor){
+  var x = xcor; var y = ycor;
+  if (xcor > 600){
+    x -= 600; //overlaps player 2
+  }
+  x -= 150;
+  y -= 220; // makes it start from origin
+  if (ycor < 400){
+    if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 1
+      return 1;
+    }
+    else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 2
+      return 2;
+    }
+  } else {
+    y -= 180;
+    if (x <= 96 && y <= 96 && x >= 0 && y >= 0){ // within char 3
+      return 3;
+    }
+    else if (x-200 <= 96 && y <= 96 && x-200 >= 0 && y >= 0) { // within char 4
+      return 4;
+    }
+  }
 }
 
 
